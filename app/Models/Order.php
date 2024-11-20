@@ -7,7 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    public function product()
+{
+    return $this->belongsTo(Product::class);
+}
+
+public function order()
+{
+    return $this->belongsTo(Order::class);
+}
     use HasFactory;
-    protected $table = 'mtkh_order';
+    protected $table = 'order';
 
 }

@@ -16,7 +16,17 @@
     <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css"
+    integrity="sha512-6S2HWzVFxruDlZxI3sXOZZ4/eJ8AcxkQH1+JjSe/ONCEqR9L4Ysq5JdT5ipqtzU7WHalNwzwBv+iE51gNHJNqQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
+<style>
+#toast-container .toast.toast-error {
+    background-color: #28a745 !important; /* Màu xanh */
+    color: white !important; /* Màu chữ */
+}
+
+</style>
 
 <body class="hold-transition sidebar-mini">
     <!-- Site wrapper -->
@@ -135,10 +145,16 @@
                     </div>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ route('website.logout') }}">
+                        <i class="fas fa-arrow-circle-right"></i> Thoát
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#">
                         <i class="fas fa-th-large"></i>
                     </a>
                 </li>
+
             </ul>
         </nav>
         <!-- /.navbar -->
@@ -154,12 +170,13 @@
             <div class="sidebar">
                 <!-- Sidebar user (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        <img src="{{ asset('images/anh-27-meme-dang-yeu-didongmy.jpg') }}" class="img-circle elevation-2"
-                            alt="User Image">
-                    </div>
                     <div class="info">
-                        <a href="#" class="d-block">Mai Hiền</a>
+                        @if (Auth::check())
+                            <img src="{{ asset('images/user.webp') }}" alt="user" id="userImage" />
+                            <span class="text-light">{{ Auth::user()->name }}</span>
+                        @else
+                            <img src="{{ asset('images/user.webp') }}" alt="user" id="userImage" />
+                        @endif
                     </div>
                 </div>
 
@@ -167,6 +184,7 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
+
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item has-treeview">
@@ -233,7 +251,7 @@
                             <a href="{{ route('admin.order.index') }}" class="nav-link">
                                 <i class="nav-icon fas fa-th-large"></i>
                                 <p>
-                                    Đơn hàng 
+                                    Đơn hàng
                                 </p>
                             </a>
                         </li>
@@ -351,6 +369,18 @@
     <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="{{ asset('dist/js/demo.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"
+        integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    @if (Session::has('message'))
+        <script>
+            toastr.options = {
+                "processBar": true,
+                "closeButton": true
+            };
+            toastr.success("{{ Session::get('message') }}");
+        </script>
+    @endif
 </body>
 
 </html>

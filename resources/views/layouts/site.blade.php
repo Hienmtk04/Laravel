@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('title')</title>
     <link rel="stylesheet" href="{{ asset('css/layoutsite.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/product.css') }}">
     <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.css') }}">
@@ -15,6 +16,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css"
+        integrity="sha512-6S2HWzVFxruDlZxI3sXOZZ4/eJ8AcxkQH1+JjSe/ONCEqR9L4Ysq5JdT5ipqtzU7WHalNwzwBv+iE51gNHJNqQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         /* Custom CSS */
         .owl-carousel .owl-item img {
@@ -23,9 +27,16 @@
             height: auto;
         }
 
+        .addCart {
+            background-color: #fafafa;
+            color: #95e0d2;
+            ;
+
+        }
+
         .addCart:hover {
             background-color: #95e0d2;
-            color: #95e0d2;
+            color: #fafafa;
             ;
 
         }
@@ -99,6 +110,56 @@
         .item5 {
             padding: 20px;
         }
+
+        .button_add {
+            color: #95e0d2;
+        }
+
+        .button_add:hover {
+            background-color: #95e0d2;
+            color: white;
+        }
+
+        .add_Cart:hover {
+            background-color: #fc3e3e;
+            color: white;
+        }
+
+        .detail {
+            color: #95e0d2;
+        }
+
+        .detail:hover {
+            background-color: #95e0d2;
+            color: white;
+        }
+
+        .cart-count {
+            background: #0ede9c;
+            color: white;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        #dropdownMenu:hover .dropdown-content {
+            display: block;
+        }
+
+        #dropdownMenu .dropdown-content li a {
+            color: black;
+            text-decoration: none;
+            display: block;
+            padding: 5px 0;
+        }
+
+        #dropdownMenu .dropdown-content li a:hover {
+            color: #94e3df;
+        }
     </style>
 
     @yield('header')
@@ -122,31 +183,66 @@
                         </div>
                         {{-- Menu --}}
                         <x-main-menu />
-                        <div class="col-lg-2 col-md-2 mt-4">
+                        <div class="col-lg-3 col-md-3 mt-4">
                             <div class="row">
-                                <div class="inline-b hidden-xs col dropstart " id="userDropdown">
-                                    <span class="imguser">
-                                        <img src="{{ asset('images/user.webp') }}" alt="user" id="userImage">
-                                        <ul class="dropdown-content" id="userDropdownContent">
-                                            <li class="btn rounded-fill mt-3" style="width: 100px; background: #95e0d2">
-                                                <a class="dropdown-item mt-2" href="#">Đăng nhập</a></li>
-                                            <li class="btn border-secondary rounded-fill my-3" style="width: 100px"><a
-                                                    class="dropdown-item mt-2" href="#">Đăng ký</a></li>
-                                        </ul>
+                                <div class="inline-b hidden-xs col-md-5 dropstart " id="userDropdown">
+                                    <span class="imguser" style="width:auto">
+                                        @if (Auth::check())
+                                            <img src="{{ asset('images/user.webp') }}" alt="user" id="userImage" />
+                                            <span>{{ Auth::user()->name }}</span>
+                                        @else
+                                            <img src="{{ asset('images/user.webp') }}" alt="user" id="userImage" />
+                                            <span>No user</span>
+                                        @endif
+
+                                        @if (Auth::check())
+                                            <ul class="dropdown-content" id="userDropdownContent">
+                                                <li class="btn rounded-fill mt-3"
+                                                    style="width: 100px; background: #95e0d2">
+                                                    <a class="dropdown-item mt-2"
+                                                        href="{{ route('website.logout') }}">Đăng xuất</a>
+                                                </li>
+                                                <li class="btn border-secondary rounded-fill my-3" style="width: 100px">
+                                                    <a class="dropdown-item mt-2" href="#">Đăng ký</a>
+                                                </li>
+                                            </ul>
+                                        @else
+                                            <ul class="dropdown-content" id="userDropdownContent">
+                                                <li class="btn rounded-fill mt-3"
+                                                    style="width: 100px; background: #95e0d2">
+                                                    <a class="dropdown-item mt-2"
+                                                        href="{{ route('website.getlogin') }}">Đăng nhập</a>
+                                                </li>
+                                                <li class="btn border-secondary rounded-fill my-3" style="width: 100px">
+                                                    <a class="dropdown-item mt-2" href="#">Đăng ký</a>
+                                                </li>
+                                            </ul>
+                                        @endif
+
                                     </span>
                                 </div>
-                                <div class="inline-block col">
+                                <div class="inline-block col-md-5 text-center">
                                     <span class="">
-                                        <a href="#"><img src="{{ asset('images/bag.webp') }}" alt="cart"></a>
+                                        <a href="{{ route('site.cart.index') }}"
+                                            style="text-decoration: none; color:black;">
+                                            @php
+                                                $cart = session('cart', []);
+                                                $count = is_array($cart) && count($cart) > 0 ? count($cart) : 0;
+                                            @endphp
+
+                                            <img src="{{ asset('images/bag.webp') }}" alt="cart" id="showcount" />
+                                            <span class="cart-count">{{ $count }}</span>
+                                        </a>
                                     </span>
                                 </div>
-                                <div class="inline-b hidden-xs col dropstart " id="userDropdown">
+                                <div class="inline-b hidden-xs col-md-2 dropstart " id="userDropdown">
                                     <span class="search">
                                         <i class="fa-solid fa-magnifying-glass text-dark"></i>
                                         <div class="search-container dropdown-content" id="userDropdownContent">
-                                            <form action="/search" method="GET" class="search-form">
+                                            <form action="{{ route('site.product.search') }}" method="GET"
+                                                class="search-form">
                                                 <input type="text" name="query" class="search-input"
-                                                    placeholder="Tìm kiếm...">
+                                                    placeholder="Tìm kiếm..." value="{{ request('search_word') }}">
                                                 <button type="submit" class="search-button">
                                                     <i class="fa-solid fa-magnifying-glass text-dark"></i>
                                                 </button>
@@ -165,6 +261,7 @@
     <main>
         @yield('maincontent')
     </main>
+    <hr />
     <footer>
         <footer>
             <div class="container justify-content-center mt-5 mb-5">
@@ -193,42 +290,60 @@
                             <span>HƯỚNG DẪN</span>
                         </h4>
                         <hr class="text-success" style="font-size: 50px; width: 150px">
-                        <div class="mt-3">
-                            <span>Trang chủ</span>
-                        </div>
-                        <div class="mt-3">
-                            <span>Giới thiệu</span>
-                        </div>
-                        <div class="mt-3">
-                            <span>Sản phẩm</span>
-                        </div>
-                        <div class="mt-3">
-                            <span>Tin tức</span>
-                        </div>
-                        <div class="mt-3">
-                            <span>Liên hệ</span>
-                        </div>
+                        <a style="text-decoration: none; color: black" href="{{ route('site.home') }}">
+                            <div class="mt-3">
+                                <span>Trang chủ</span>
+                            </div>
+                        </a>
+                        <a style="text-decoration: none; color: black" href="{{ route('site.intro') }}">
+                            <div class="mt-3">
+                                <span>Giới thiệu</span>
+                            </div>
+                        </a>
+                        <a style="text-decoration: none; color: black" href="{{ route('site.product') }}">
+                            <div class="mt-3">
+                                <span>Sản phẩm</span>
+                            </div>
+                        </a>
+                        <a style="text-decoration: none; color: black" href="{{ route('site.news') }}">
+                            <div class="mt-3">
+                                <span>Tin tức</span>
+                            </div>
+                        </a>
+                        <a style="text-decoration: none; color: black" href="{{ route('site.contact') }}">
+                            <div class="mt-3">
+                                <span>Liên hệ</span>
+                            </div>
+                        </a>
                     </div>
                     <div class="col-md-3">
                         <h4 class="title-menu">
                             <span>CHÍNH SÁCH</span>
                         </h4>
                         <hr class="text-success" style="font-size: 50px; width: 150px">
-                        <div class="mt-3">
-                            <span>Trang chủ</span>
-                        </div>
-                        <div class="mt-3">
-                            <span>Giới thiệu</span>
-                        </div>
-                        <div class="mt-3">
-                            <span>Sản phẩm</span>
-                        </div>
-                        <div class="mt-3">
-                            <span>Tin tức</span>
-                        </div>
-                        <div class="mt-3">
-                            <span>Liên hệ</span>
-                        </div>
+                        {{-- <a style="text-decoration: none; color: black">
+                            <div class="mt-3">
+                                <span>Chính sách mua hàng</span>
+                            </div>
+                        </a>
+                        <a style="text-decoration: none; color: black" href="{{}}">
+                            <div class="mt-3">
+                                <span>Chính sách bảo hành</span>
+                            </div>
+                        </a>
+                        <a style="text-decoration: none; color: black">
+                            <div class="mt-3">
+                                <span>Chính sách vận chuyển</span>
+                            </div>
+                        </a>
+                        <a style="text-decoration: none; color: black">
+                            <div class="mt-3">
+                                <span>Chính sách đổi trả</span>
+                            </div>
+                        </a> --}}
+
+                        <x-chinh-sach />
+
                     </div>
 
                     <div class="col-md-3">
@@ -237,19 +352,16 @@
                         </h4>
                         <hr class="text-success" style=" width: 150px">
                         <div class="mt-3">
-                            <span>Trang chủ</span>
+                            <span>DelCosmetic có thực sự là một thiên đường làm đẹp?</span>
                         </div>
                         <div class="mt-3">
-                            <span>Giới thiệu</span>
+                            <span>Fake hay Real?</span>
                         </div>
                         <div class="mt-3">
-                            <span>Sản phẩm</span>
+                            <span>Liệu có tốt như lời đồn?</span>
                         </div>
                         <div class="mt-3">
-                            <span>Tin tức</span>
-                        </div>
-                        <div class="mt-3">
-                            <span>Liên hệ</span>
+                            <span>Đội ngũ nhân viên tư vấn có lương thiện?</span>
                         </div>
                     </div>
 
@@ -316,5 +428,23 @@
         }
     })
 </script>
+<script>
+    function increaseValue() {
+        var value = parseInt(document.getElementById('qty').value, 10);
+        value = isNaN(value) ? 0 : value;
+        value++;
+        document.getElementById('qty').value = value;
+    }
+
+    function decreaseValue() {
+        var value = parseInt(document.getElementById('qty').value, 10);
+        value = isNaN(value) ? 0 : value;
+        if (value > 1) {
+            value--;
+            document.getElementById('qty').value = value;
+        }
+    }
+</script>
+
 
 </html>

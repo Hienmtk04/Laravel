@@ -7,6 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderDetail extends Model
 {
+    public function product()
+{
+    return $this->belongsTo(Product::class);
+}
+
+public function order()
+{
+    return $this->belongsTo(Order::class);
+}
     use HasFactory;
-    protected $table = 'mtkh_orderdetail';
+    protected $table = 'orderdetail';
 }

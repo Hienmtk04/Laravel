@@ -2,6 +2,7 @@
 
 namespace App\View\Components;
 
+use App\Models\Banner;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -23,7 +24,8 @@ class Slider extends Component
      */
     public function render(): View|Closure|string
     {
-        $list = DB::table('mtkh_banner')->get();
-        return view('components.slider', compact('list'));
+        $slideshow = Banner::where('position', '=','slideshow')->get();
+        $banner = Banner::where('position', '=','banner')->get();
+        return view('components.slider', compact('slideshow','banner'));
     }
 }

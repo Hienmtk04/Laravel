@@ -12,6 +12,6 @@ class Brand extends Model
         return $this->hasMany(Product::class);
     }
     use HasFactory;
-    protected $table = 'mtkh_brand';
+    protected $table = 'brand';
 
 }

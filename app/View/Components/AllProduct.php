@@ -23,7 +23,9 @@ class AllProduct extends Component
      */
     public function render(): View|Closure|string
     {
-        $list = DB::table('mtkh_product')->get();
+        $list = DB::table('product')
+        ->orderBy('created_at','DESC')
+        ->get();
         return view('components.all-product', compact('list'));
     }
 }

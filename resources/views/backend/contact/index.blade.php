@@ -1,58 +1,76 @@
 @extends('layouts.admin')
 @section('title', 'Quản lý liên hệ')
 @section('maincontent')
-    <div id="page-wrapper">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12 d-flex justify-content-between align-items-center mb-4" style="margin-bottom: 20px;">
-                    <div>
-                        <h1>Các khách hàng liên hệ</h1>
+    <section class="content">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h1>Quản lý liên hệ</h1>
                     </div>
-                    <div class="ml-auto">
-                        <a href=""><button type="button" class="btn btn-secondary ml-1 mb-4">
-                                <CgAdd /> Thêm khách hàng
-                            </button></a>
-                        <a href=""><button type="button" class="btn btn-danger ml-1 mb-4">
-                                <CgAdd /> Thùng rác
-                            </button></a>
+                    <div class="col-12 text-right">
+                        <a class="btn btn-sm btn-danger" href="{{ route('admin.contact.trash') }}">
+                            <i class="fas fa-trash"></i> Thùng rác
+                        </a>
                     </div>
                 </div>
-                <div class="col-lg-12">
-                    <table class="table table-bordered table-lg">
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
                         <tr>
-                            <th style="width: 50px">ID</th>
-                            <th>Tên liên hệ</th>
+                            <th class="text-center" style="width:30px;">#</th>
+                            <th>Họ tên</th>
+                            <th>Điện thoại</th>
                             <th>Email</th>
-                            <th>Số điện thoại</th>
-                            <th>Chủ đề</th>
-                            <th style="width: 150px">Nội dung</th>
-                            <th style="width: 250px">Hành động</th>
-
+                            <th>Tiêu đề</th>
+                            <th class="text-center" style="width:200px;">Chức năng</th>
+                            <th class="text-center" style="width:30px;">ID</th>
                         </tr>
+                    </thead>
+                    <tbody>
                         @foreach ($list as $item)
+                            @php
+                                $args = ['id' => $item->id];
+
+                            @endphp
                             <tr>
-                                <td>{{ $item->id }}</td>
+                                <td class="text-center">
+                                    <input type="checkbox" id="checkId" value="1" name="checkId[]">
+                                </td>
                                 <td>{{ $item->name }}</td>
-                                <td>{{ $item->email }}</td>
                                 <td>{{ $item->phone }}</td>
+                                <td>{{ $item->email }}</td>
                                 <td>{{ $item->title }}</td>
-                                <td>{{ $item->content }}</td>
-                                <td>
-                                    <a href=""><button type="button" class="btn btn-success ml-2"><i
-                                                class="fa fa-fw fa-edit"></i></i></button></a>
-                                    <a href=""><button type="button" class="btn btn-danger ml-2"><i
-                                                class="fa fa-fw fa-trash"></i></button></a>
-                                    <a href=""><button type="button" class="btn btn-warning ml-2"><i
-                                                class="fa fa-fw fa-eye"></i></button></a>
+                                <td class="text-center">
+                                    @if ($item->status == 1)
+                                        <a href="{{ route('admin.contact.status', $args) }}" class="btn btn-sm btn-success">
+                                            <i class="fas fa-toggle-on"></i>
+                                        </a>
+                                    @else
+                                        <a href="{{ route('admin.contact.status', $args) }}" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-toggle-off"></i>
+                                        </a>
+                                    @endif
+                                    <a href="{{ route('admin.contact.show', $args) }}" class="btn btn-sm btn-info">
+                                        <i class="far fa-eye"></i>
+                                    </a>
+                                    <a href="{{ route('admin.contact.edit', $args) }}" class="btn btn-sm btn-primary">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                    <a href="{{ route('admin.contact.delete', $args) }}" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    {{ $item->id }}
                                 </td>
                             </tr>
                         @endforeach
-
-                    </table>
-                </div>
-
+                    </tbody>
+                </table>
             </div>
         </div>
-    </div>
+    </section>
 
 @endsection

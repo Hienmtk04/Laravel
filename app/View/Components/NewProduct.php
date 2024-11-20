@@ -23,7 +23,7 @@ class NewProduct extends Component
      */
     public function render(): View|Closure|string
     {
-        $list = DB::table('mtkh_product')
+        $list = DB::table('product')
               ->orderBy('created_at', 'desc')
               ->limit(6)
               ->get();

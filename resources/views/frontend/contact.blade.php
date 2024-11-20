@@ -1,41 +1,6 @@
 @extends('layouts.site')
 @section('title', 'Liên hệ')
 @section('maincontent')
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title')</title>
-    <link rel="stylesheet" href="{{ asset('css/layoutsite.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/contact.css') }}">
-    <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('fontawesome/css/all.css') }}">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Owl Carousel CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
-        {{-- <style>
-            .bread-crumb {
-                background: #ece9e9;
-                border-top: solid 1px #ebebeb;
-                border-bottom: solid 2px #d1cfcf;
-            }
-            .button {
-                background-color: #94e3df;
-            }
-            
-        </style> --}}
-
-</head>
-
-<body>
-
     <section class="bread-crumb">
         <span class="crumb-border p-3"></span>
         <div class="container">
@@ -44,8 +9,7 @@
                     <ul class="breadcrumb">
                         <li class="home">
                             <a href="{{ route('site.home') }}" class="text-dark"><span>Trang chủ</span></a>
-                            <span class="mr_lr">&nbsp;<i class="fa fa-angle-right"
-                                    style="color: #94e3df;"></i>&nbsp;</span>
+                            <span class="mr_lr">&nbsp;<i class="fa fa-angle-right" style="color: #94e3df;"></i>&nbsp;</span>
                         </li>
 
                         <li><strong><span style="color: #94e3df;">Liên hệ</span></strong></li>
@@ -64,7 +28,14 @@
                     <p>Để liên hệ và nhận các thông in khuyến mại sớm nhất,
                         xin vui lòng điền đầy đủ thông tin của bạn vào form dưới đây. Chúng tôi sẽ liên lạc lại với bạn
                         trong thời gian sớm nhất</p>
-                    <form action="#" class="needs-validation" novalidate>
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                    <form action="{{ route('site.contact.add') }}" method="POST">
+                        @csrf
+                        @method('post')
                         <div class="mb-3">
                             <input type="text" name="name" id="name" class="form-control" placeholder="Họ và tên"
                                 required>
@@ -73,12 +44,12 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <input type="tel" name="phone" id="phone" class="form-control" placeholder="Số điện thoại"
-                                required>
+                            <input type="tel" name="phone" id="phone" class="form-control"
+                                placeholder="Số điện thoại" required>
                             <div class="invalid-feedback">
                                 Vui lòng nhập số điện thoại hợp lệ.
                             </div>
-                        </div> 
+                        </div>
                         <div class="mb-3">
                             <input type="email" name="email" id="email" class="form-control" placeholder="Email"
                                 required>
@@ -87,13 +58,17 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <textarea name="contact" id="comment" class="form-control" rows="5" placeholder="Nội dung"
-                                required></textarea>
+                            <input type="text" name="title" id="title" class="form-control" placeholder="Chủ đề"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <textarea name="content" id="comment" class="form-control" rows="5" placeholder="Nội dung" required></textarea>
                             <div class="invalid-feedback">
                                 Vui lòng nhập nội dung.
                             </div>
                         </div>
-                        <button type="submit" class="btn button-success" style="background: #0c6c04 ; color: white" >Gửi liên hệ</button>
+                        <button type="submit" class="btn button-success" style="background: #0c6c04 ; color: white">Gửi
+                            liên hệ</button>
                     </form>
                 </div>
                 <div class="col-md-6">
@@ -111,15 +86,5 @@
         </div>
 
     </section>
-
-</body>
-<script src=" {{ asset('js/main.js') }}"></script>
-<script src="{{ asset('jquery/jquery-3.7.1.min.js') }}"></script>
-<script src="{{ asset('fontawesome/js/all.min.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
-</script>
-
-</html>
 
 @endsection

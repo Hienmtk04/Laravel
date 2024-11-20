@@ -1,10 +1,16 @@
 <div class="my-5">
     <div id="carouselExampleControls" class="carousel slide position-relative" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            @foreach ($list as $item)
-            <div class="carousel-item active">
-                <img src="{{ asset($item->image) }}" class="d-block w-100" alt="...">
-            </div>
+        <div class="carousel-inner" style="height: 600px">
+            @foreach ($slideshow as $item)
+                @if ($loop->first)
+                    <div class="carousel-item active">
+                        <img src="{{ asset('images/banner/' . $item->image) }}" class="d-block w-100" alt="...">
+                    </div>
+                @else
+                    <div class="carousel-item active">
+                        <img src="{{ asset('images/banner/' . $item->image) }}" class="d-block w-100" alt="...">
+                    </div>
+                @endif
             @endforeach
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"

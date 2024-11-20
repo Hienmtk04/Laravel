@@ -1,1 +1,122 @@
-/vendor/*
+import axios from "axios";
+const bcrypt = require('bcryptjs');
+import { axiosIntance } from '../api/axios'
+import { AsyncStorage } from 'react-native';
+
+
+let API_URL = "http://localhost:8080/api";
+function callApi(endpoint, method = "GET", body) {
+    return axios({
+        method,
+        url: `${API_URL}/${endpoint}`,
+        data: body,
+    }).catch((e) => {
+        console.log(e);
+    });
+}
+export function GET_ALL(endpoint) {
+    return callApi(endpoint, "GET");
+}
+export function GET_PAGE(endpoint, page = 0, size = 10, categoryId = null) {
+    let url = `${endpoint}?page=${page}&size=${size}`;
+    if (categoryId !== null) {
+        url += `&categoryId=${categoryId}`;
+    }
+    return callApi(url, "GET");
+}
+export function GET_ID(endpoint, id) {
+    return callApi(endpoint + "/" + id, "GET");
+}
+export function POST_ADD(endpoint, data) {
+    return callApi(endpoint, "POST", data);
+}
+export function PUT_EDIT(endpoint, data) {
+    return callApi(endpoint, "PUT", data);
+}
+export function DELETE_ID(endpoint) {
+    return callApi(endpoint, "DELETE");
+}
+export function GET_IMG(endpoint, imgName) {
+    const imageURL = `${API_URL}/image/${endpoint}/${imgName}`;
+    console.log("Generated Image URL: ", imageURL);
+    return imageURL;
+}
+
+export const registerUser = async (username: string, numphone: string, pass: string, email: string | number) => {
+    try {
+        // Hash the password
+        const salt = bcrypt.genSaltSync(10);
+        const hashedPassword = bcrypt.hashSync(pass, salt);
+
+        // Send the hashed password to the server
+        const response = await POST_ADD(`users`, { username, numphone, pass: hashedPassword, email });
+        return response.data;
+    } catch (error) {
+        console.log('Error registering user', error);
+        throw error;
+    }
+};
+
+// export const loginUser = async (email, password) => {
+//     try {
+//         const response = await GET_ID('/login', email);
+
+//         if (response && response.data) {
+//             const user = response.data;
+
+//             console.log('User data:', user); 
+//             console.log('Entered password:', password); 
+//             console.log('Stored hashed password:', user.pass); 
+
+//             if (!password || !user.pass) {
+//                 throw new Error('Password is missing or not found');
+//             }
+
+//             const isPasswordMatch = bcrypt.compareSync(password, user.pass);
+
+//             if (isPasswordMatch) {
+//                 return user; 
+//             } else {
+//                 throw new Error('Invalid password'); 
+//             }
+//         } else {
+//             throw new Error('User not found'); 
+//         }
+//     } catch (error) {
+//         console.error('Error logging in:', error.message);
+//         throw error;
+//     }
+// };
+
+
+export async function loginUser(body) {
+    const API_URL_LOGIN = "/login"; // Use relative path since baseURL is set in axiosInstance
+
+    console.log("Sending login request:", body);
+
+    try {
+
+        const response = await GET_ID('/login', body, {
+            headers: {
+                accept: "*/*",
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (response.status === 200) {
+            console.log("Login successful, response:", response);
+            const token = response.data.token || response.data["jwt-token"];
+            if (token) {
+                await AsyncStorage.setItem("authToken", token);
+            } else {
+                console.error("Token not found in response");
+            }
+        } else {
+            console.error("Login failed with status:", response.status);
+        }
+        return response;
+    } catch (error) {
+        console.log("Login error:", error);
+        throw error;
+    }
+}

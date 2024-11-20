@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Topic extends Model
 {
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
     use HasFactory;
-    protected $table = 'mtkh_topic';
+    protected $table = 'topic';
 }

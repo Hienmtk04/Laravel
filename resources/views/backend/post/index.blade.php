@@ -1,58 +1,86 @@
 @extends('layouts.admin')
 @section('title', 'Quản lý bài viết')
 @section('maincontent')
-    <div id="page-wrapper">
+    <section class="content-header">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12 d-flex justify-content-between align-items-center mb-4" style="margin-bottom: 20px;">
-                    <div>
-                        <h1>Tất cả các bài viết</h1>
-                    </div>
-                    <div class="ml-auto">
-                        <a href=""><button type="button" class="btn btn-secondary ml-1 mb-4">
-                                <CgAdd /> Thêm bài viết
-                            </button></a>
-                        <a href=""><button type="button" class="btn btn-danger ml-1 mb-4">
-                                <CgAdd /> Thùng rác
-                            </button></a>
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Quản lý bài viết</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="content">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <a class="btn btn-sm btn-success" href="{{ route('admin.post.create') }}">
+                            <i class="fas fa-plus"></i> Thêm
+                        </a>
+                        <a class="btn btn-sm btn-danger" href="{{ route('admin.post.trash') }}">
+                            <i class="fas fa-trash"></i> Thùng rác
+                        </a>
                     </div>
                 </div>
-                <div class="col-lg-12">
-                    <table class="table table-bordered table-lg">
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
                         <tr>
-                            <th style="width: 50px">ID</th>
-                            <th style="width: 50px">Topic ID</th>
-                            <th style="width: 200px">Tiêu đề</th>
-                            <th>Slug</th>
-                            <th>Image</th>
-                            <th style="width: 300px">Chi tiết</th>
-                            <th style="width: 250px">Hành động</th>
-
+                            <th class="text-center" style="width:30px;">#</th>
+                            <th class="text-center">Hình</th>
+                            <th>Tiêu đề bài viết</th>
+                            <th>Chủ đề</th>
+                            <th>Kiểu</th>
+                            <th class="text-center" style="width:200px;">Chức năng</th>
+                            <th class="text-center" style="width:30px;">ID</th>
                         </tr>
+                    </thead>
+                    <tbody>
                         @foreach ($list as $item)
+                            @php
+                                $args = ['id' => $item->id]
+                            @endphp
                             <tr>
-                                <td>{{ $item->id }}</td>
-                                <td>{{ $item->topic_id }}</td>
+                                <td class="text-center">
+                                    <input type="checkbox" id="checkId" value="1" name="checkId[]">
+                                </td>
+                                <td><img src='{{ asset('images/posts/'. $item->image) }}'
+                                    style="width:100px; height:100px" alt={{ $item->name }}
+                                 /></td>
                                 <td>{{ $item->title }}</td>
-                                <td>{{ $item->slug }}</td>
-                                <td><img src='{{ asset($item->image) }}' style="width:150px; height:150px"  alt={{ $item->name }}/></td>
-                                <td>{{ $item->detail }}</td>
-                                <td>
-                                    <a href=""><button type="button" class="btn btn-success ml-2"><i
-                                                class="fa fa-fw fa-edit"></i></i></button></a>
-                                    <a href=""><button type="button" class="btn btn-danger ml-2"><i
-                                                class="fa fa-fw fa-trash"></i></button></a>
-                                    <a href=""><button type="button" class="btn btn-warning ml-2"><i
-                                                class="fa fa-fw fa-eye"></i></button></a>
+                                <td>{{ $item->topic->name }}</td>                                
+                                <td>{{ $item->type }}</td>
+                                <td class="text-center">
+                                    @if ($item->status == 1)
+                                        <a href="{{ route('admin.post.status', $args) }}" class="btn btn-sm btn-success">
+                                            <i class="fas fa-toggle-on"></i>
+                                        </a>
+                                    @else
+                                        <a href="{{ route('admin.post.status', $args) }}" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-toggle-off"></i>
+                                        </a>
+                                    @endif
+                                    <a href="{{ route('admin.post.show', $args) }}" class="btn btn-sm btn-info">
+                                        <i class="far fa-eye"></i>
+                                    </a>
+                                    <a href="{{ route('admin.post.edit', $args) }}" class="btn btn-sm btn-primary">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                    <a href="{{ route('admin.post.delete', $args) }}" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    {{ $item->id }}
                                 </td>
                             </tr>
                         @endforeach
-
-                    </table>
-                </div>
-
+                    </tbody>
+                </table>
             </div>
         </div>
-    </div>
+    </section>
 
 @endsection

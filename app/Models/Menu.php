@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Menu extends Model
 {
     use HasFactory;
-    protected $table = 'mtkh_menu';
+    protected $table = 'menu';
 
 }

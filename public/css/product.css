@@ -28,7 +28,7 @@
 
 .scrollview {
     width: auto;
-    height: 200px;
+    height: 300px;
     overflow: auto;
     /* Cho phép cuộn khi nội dung vượt quá kích thước của scrollview */
     padding-right: 20px;
@@ -37,10 +37,14 @@
 .scrollview ul li a {
     font-size: 15px;
 }
-.button_add{
-    color: #ba2c2c ;
+.button_add {
+    color: #fc3e3e;
+}s
+.button_add:hover {
+    background-color: #fc3e3e;
+    color: white;
 }
-.button_add:hover{
-    background-color: #ba2c2c;
+.add_Cart:hover {
+    background-color: #fc3e3e;
     color: white;
 }
